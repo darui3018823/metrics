@@ -22,3 +22,7 @@ jobs:
           plugin_languages: yes
           plugin_languages_ignored: C, C++, Makefile, CMake
           plugin_languages_limit: 8
+
+          repositories_skipped: |
+            darui3018823/swicthbot_discordbot
+            darui3018823/Auto_Reply
