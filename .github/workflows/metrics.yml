@@ -26,3 +26,5 @@ jobs:
           repositories_skipped: |
             darui3018823/swicthbot_discordbot
             darui3018823/Auto_Reply
+            darui3018823/stable-diffusion
+            darui3018823/fullcode
