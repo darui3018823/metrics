@@ -1,28 +1,31 @@
 name: GitHub Metrics
 
 on:
-  schedule:
-    - cron: "0 15 * * 0"
-  workflow_dispatch:
+  schedule:
+    - cron: "0 15 * * 0"
+  workflow_dispatch:
 
 jobs:
-  metrics:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: lowlighter/metrics@v3.34
-        with:
-          token: ${{ secrets.METRICS_TOKEN }}
-          user: darui3018823
-          template: classic
-          base: header, activity, community, repositories
-          config_timezone: Asia/Tokyo
+  metrics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: lowlighter/metrics@v3.34
+        with:
+          token: ${{ secrets.METRICS_TOKEN }}
+          user: darui3018823
+          template: classic
+          base: header, activity, community, repositories
+          config_timezone: Asia/Tokyo
 
-          plugin_licenses: yes
-          plugin_languages: yes
-          plugin_languages_ignored: C, C++, Makefile, CMake
-          plugin_languages_limit: 8
+          plugin_licenses: yes
+          
+          plugin_languages_details: percentage
+          plugin_languages_sections: most-used
+          plugin_languages: yes
+          plugin_languages_ignored: C, C++, Makefile, CMake
+          plugin_languages_limit: 8
 
-          repositories_skipped: |
-            darui3018823/swicthbot_discordbot
-            darui3018823/Auto_Reply
-            darui3018823/stable-diffusion
+          repositories_skipped: |
+            darui3018823/swicthbot_discordbot
+            darui3018823/Auto_Reply
+            darui3018823/stable-diffusion
