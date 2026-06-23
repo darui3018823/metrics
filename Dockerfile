@@ -18,9 +18,8 @@ RUN chmod +x /metrics/source/app/action/index.mjs \
   # Install deno for miscellaneous scripts
   && apt-get install -y curl unzip \
   && curl -fsSL https://deno.land/x/install/install.sh | DENO_INSTALL=/usr/local sh \
-  # Install ruby to support github licensed gem
-  && apt-get install -y ruby-full git g++ cmake pkg-config libssl-dev \
-  && gem install licensed \
+  # Install git and build tools
+  && apt-get install -y git g++ cmake pkg-config libssl-dev \
   # Install python for node-gyp
   && apt-get install -y python3 \
   # Clean apt/lists
