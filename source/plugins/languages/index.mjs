@@ -46,10 +46,10 @@ export default async function({login, data, imports, q, rest, account}, {enabled
     const unique = new Set(repositories.flatMap(repository => repository.languages.edges.map(({node: {name}}) => name))).size
 
     //Iterate through user's repositories and retrieve languages data
-    console.debug(`metrics/compute/${login}/plugins > languages > processing ${data.user.repositories.nodes.length} repositories`)
+    console.debug(`metrics/compute/${login}/plugins > languages > processing ${repositories.length} repositories`)
     const languages = {unique, sections, details, indepth, colors: {}, total: 0, stats: {}, "stats.recent": {}}
     const customColors = {}
-    for (const repository of data.user.repositories.nodes) {
+    for (const repository of repositories) {
       //Skip repository if asked
       if (!imports.filters.repo(repository, skipped))
         continue

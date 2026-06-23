@@ -9,7 +9,7 @@ jobs:
   metrics:
     runs-on: ubuntu-latest
     steps:
-      - uses: lowlighter/metrics@v3.34
+      - uses: darui3018823/metrics@master
         with:
           token: ${{ secrets.METRICS_TOKEN }}
           user: darui3018823
@@ -17,8 +17,6 @@ jobs:
           base: header, activity, community, repositories
           config_timezone: Asia/Tokyo
 
-          plugin_licenses: yes
-          
           plugin_languages: yes
           plugin_languages_ignored: C, C++, Makefile, CMake
           plugin_languages_limit: 8
