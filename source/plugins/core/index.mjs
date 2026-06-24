@@ -124,6 +124,7 @@ export default async function({login, q}, {conf, data, rest, graphql, plugins, q
   computed.diskUsage = `${imports.format.bytes(data.user.repositories.totalDiskUsage * 1000)}`
 
   //Compute licenses stats
+  console.warn(`metrics/compute/${login} > licenses.used keys: ${JSON.stringify(Object.keys(computed.licenses.used))}`)
   computed.licenses.favorite = Object.entries(computed.licenses.used).sort(([_an, a], [_bn, b]) => b - a).slice(0, 1).map(([name, _value]) => name) ?? ""
 
   //Compute total commits
