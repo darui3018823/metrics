@@ -45,7 +45,7 @@
             </mask>
             <rect mask="url(#languages-bar)" x="0" y="0" width="<%= languages.length ? 0 : width %>" height="8" fill="#d1d5da"/>
             <% for (const {name, value, color, x} of languages) { %>
-              <rect mask="url(#languages-bar)" x="<%= x*width %>" y="0" width="<%= value*width %>" height="8" fill="<%= color ?? "#959DA5" %>"/>
+              <rect mask="url(#languages-bar)" x="<%= x*width + (x > 0 ? 1 : 0) %>" y="0" width="<%= value*width - (x > 0 ? 1 : 0) %>" height="8" fill="<%= color ?? "#959DA5" %>"/>
             <% } %>
           </svg>
         <% } %>
