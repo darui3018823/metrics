@@ -128,7 +128,7 @@ export default async function({login, data, imports, q, rest, account}, {enabled
         if ((colors[i]) && (!colors[name.toLocaleLowerCase()]))
           languages[section][i].color = colors[i]
         else
-          languages[section][i].color = customColors[name] ?? languages.colors[name] ?? "#ededed"
+          languages[section][i].color = customColors[name] ?? colors[name.toLocaleLowerCase()] ?? languages.colors[name] ?? "#ededed"
       }
     }
 

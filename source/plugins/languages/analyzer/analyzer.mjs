@@ -154,7 +154,7 @@ export class Analyzer {
           this.debug(`at commit ${processed}/${commits.length} (${(100 * processed / commits.length).toFixed(2)}%, ${elapsed.toFixed(2)}m elapsed)`)
       }
     }
-    this.results.colors = Object.fromEntries(Object.entries(cache.languages).map(([lang, {color}]) => [lang, color]))
+    Object.assign(this.results.colors, Object.fromEntries(Object.entries(cache.languages).map(([lang, {color}]) => [lang, color])))
   }
 
   /**Clean a path */
