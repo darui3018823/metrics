@@ -98,7 +98,17 @@ export default async function({login, q}, {conf, data, rest, graphql, plugins, q
 
   //REST API fallback when GraphQL license data is empty
   if (Object.keys(computed.licenses.used).length === 0) {
-    console.debug(`metrics/compute/${login} > GraphQL returned no license data, falling back to REST API`)
+    console.warn(`metrics/compute/${login} > license REST fallback: repos=${data.user.repositories.nodes.length}`)
+    const first = data.user.repositories.nodes[0]
+    if (first) {
+      try {
+        const {data: testData} = await rest.repos.get({owner: first.owner.login, repo: first.name})
+        console.warn(`metrics/compute/${login} > license REST test: ${first.owner.login}/${first.name} license=${JSON.stringify(testData.license)}`)
+      }
+      catch (error) {
+        console.warn(`metrics/compute/${login} > license REST test error: ${error}`)
+      }
+    }
     const restResults = await Promise.all(
       data.user.repositories.nodes.map(async repository => {
         try {
