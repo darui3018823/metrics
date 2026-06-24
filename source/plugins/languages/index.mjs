@@ -64,6 +64,34 @@ export default async function({login, data, imports, q, rest, account}, {enabled
       }
     }
 
+    //REST API fallback when GraphQL languages data is empty
+    if (languages.total === 0) {
+      console.debug(`metrics/compute/${login}/plugins > languages > GraphQL returned no language data, falling back to REST API`)
+      const restResults = await Promise.all(
+        repositories
+          .filter(repository => imports.filters.repo(repository, skipped))
+          .map(async repository => {
+            try {
+              const {data: langData} = await rest.repos.listLanguages({owner: repository.owner.login, repo: repository.name})
+              return langData
+            }
+            catch (error) {
+              console.debug(`metrics/compute/${login}/plugins > languages > REST API fallback > ${repository.owner.login}/${repository.name} > ${error}`)
+              return {}
+            }
+          })
+      )
+      for (const langData of restResults) {
+        for (const [name, size] of Object.entries(langData)) {
+          languages.stats[name] = (languages.stats[name] ?? 0) + size
+          if (colors[name.toLocaleLowerCase()])
+            customColors[name] = colors[name.toLocaleLowerCase()]
+          languages.total += size
+        }
+      }
+      languages.unique = new Set(Object.keys(languages.stats)).size
+    }
+
     //Recently used languages
     if ((sections.includes("recently-used")) && (imports.metadata.plugins.languages.extras("indepth", {extras}))) {
       try {
