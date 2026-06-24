@@ -27,10 +27,7 @@ jobs:
           plugin_languages_analysis_timeout_repositories: 15
 
           repositories_skipped: |
-            @use.patterns
-            -*/*
-            +darui3018823/*
-            -darui3018823/swicthbot_discordbot
-            -darui3018823/Auto_Reply
-            -darui3018823/stable-diffusion
-            -darui3018823/skport-flows
+            darui3018823/swicthbot_discordbot
+            darui3018823/Auto_Reply
+            darui3018823/stable-diffusion
+            darui3018823/skport-flows
