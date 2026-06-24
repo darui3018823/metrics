@@ -96,6 +96,30 @@ export default async function({login, q}, {conf, data, rest, graphql, plugins, q
     }
   }
 
+  //REST API fallback when GraphQL license data is empty
+  if (Object.keys(computed.licenses.used).length === 0) {
+    console.debug(`metrics/compute/${login} > GraphQL returned no license data, falling back to REST API`)
+    const restResults = await Promise.all(
+      data.user.repositories.nodes.map(async repository => {
+        try {
+          const {data: repoData} = await rest.repos.get({owner: repository.owner.login, repo: repository.name})
+          return repoData.license
+        }
+        catch (error) {
+          console.debug(`metrics/compute/${login} > REST API license fallback > ${repository.owner.login}/${repository.name} > ${error}`)
+          return null
+        }
+      })
+    )
+    for (const license of restResults) {
+      if (license?.spdx_id && license.spdx_id !== "NOASSERTION") {
+        const spdxId = license.spdx_id
+        computed.licenses.used[spdxId] = (computed.licenses.used[spdxId] ?? 0) + 1
+        computed.licenses.about[spdxId] = {name: license.name, spdxId, key: license.key}
+      }
+    }
+  }
+
   //Total disk usage
   computed.diskUsage = `${imports.format.bytes(data.user.repositories.totalDiskUsage * 1000)}`
 
