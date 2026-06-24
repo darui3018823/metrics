@@ -96,37 +96,27 @@ export default async function({login, q}, {conf, data, rest, graphql, plugins, q
     }
   }
 
-  //REST API fallback when GraphQL license data is empty
+  //REST API fallback when GraphQL license data is empty (repositories.nodes broken)
   if (Object.keys(computed.licenses.used).length === 0) {
-    console.warn(`metrics/compute/${login} > license REST fallback: repos=${data.user.repositories.nodes.length}`)
-    const first = data.user.repositories.nodes[0]
-    if (first) {
-      try {
-        const {data: testData} = await rest.repos.get({owner: first.owner.login, repo: first.name})
-        console.warn(`metrics/compute/${login} > license REST test: ${first.owner.login}/${first.name} license=${JSON.stringify(testData.license)}`)
-      }
-      catch (error) {
-        console.warn(`metrics/compute/${login} > license REST test error: ${error}`)
+    console.debug(`metrics/compute/${login} > GraphQL returned no license data, falling back to REST API`)
+    try {
+      let page = 1
+      while (true) {
+        const {data: userRepos} = await rest.repos.listForUser({username: login, per_page: 100, page})
+        for (const repo of userRepos) {
+          if (repo.license?.spdx_id && repo.license.spdx_id !== "NOASSERTION") {
+            const spdxId = repo.license.spdx_id
+            computed.licenses.used[spdxId] = (computed.licenses.used[spdxId] ?? 0) + 1
+            computed.licenses.about[spdxId] = {name: repo.license.name, spdxId, key: repo.license.key}
+          }
+        }
+        if (userRepos.length < 100)
+          break
+        page++
       }
     }
-    const restResults = await Promise.all(
-      data.user.repositories.nodes.map(async repository => {
-        try {
-          const {data: repoData} = await rest.repos.get({owner: repository.owner.login, repo: repository.name})
-          return repoData.license
-        }
-        catch (error) {
-          console.debug(`metrics/compute/${login} > REST API license fallback > ${repository.owner.login}/${repository.name} > ${error}`)
-          return null
-        }
-      })
-    )
-    for (const license of restResults) {
-      if (license?.spdx_id && license.spdx_id !== "NOASSERTION") {
-        const spdxId = license.spdx_id
-        computed.licenses.used[spdxId] = (computed.licenses.used[spdxId] ?? 0) + 1
-        computed.licenses.about[spdxId] = {name: license.name, spdxId, key: license.key}
-      }
+    catch (error) {
+      console.debug(`metrics/compute/${login} > REST API license fallback > ${error}`)
     }
   }
 
