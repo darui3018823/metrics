@@ -25,6 +25,9 @@ jobs:
           plugin_languages_colors: "go:#00ADD8, powershell:#012456, c#:#178600"
           plugin_languages_analysis_timeout: 30
           plugin_languages_analysis_timeout_repositories: 15
+          plugin_languages_skipped: |
+            @use.patterns
+            -ahoshinet-labs/*
 
           repositories_skipped: |
             darui3018823/swicthbot_discordbot
