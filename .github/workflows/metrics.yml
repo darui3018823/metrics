@@ -19,7 +19,6 @@ jobs:
 
           plugin_languages: yes
           plugin_languages_indepth: no
-          plugin_languages_ignored: C, C++, Makefile, CMake, GLSL, HLSL, ShaderLab
           plugin_languages_limit: 8
           plugin_languages_aliases: "tsx:TypeScript"
           plugin_languages_colors: "go:#00ADD8, powershell:#012456, c#:#178600"
